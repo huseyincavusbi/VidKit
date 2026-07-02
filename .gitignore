@@ -1,0 +1,20 @@
+# video files
+*.mp4
+*.mov
+*.mkv
+*.m4v
+*.avi
+*.ts
+*.m2ts
+*.webm
+hevc/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# logs
+*.log
