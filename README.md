@@ -1,4 +1,4 @@
-# VidKit
+# vidkit
 
 Inspect video metadata and re-encode to efficient HEVC on Apple Silicon.
 
