@@ -243,6 +243,8 @@ def build_cmd(infile, outfile, args):
         cmd += ["-c:v", "h264_videotoolbox", "-q:v", str(args.quality)]
     else:
         die(f"unknown encoder: {e}")
+    if args.scale:
+        cmd += ["-vf", f"scale={args.scale}"]
     if args.audio_bitrate:
         cmd += ["-c:a", "aac", "-b:a", str(args.audio_bitrate) + "k"]
     elif args.audio == "copy":
@@ -451,6 +453,7 @@ def main(argv=None):
     p_conv.add_argument("--audio-bitrate", type=int, default=None, help="re-encode audio to AAC at this kbit/s (e.g. 64)")
     p_conv.add_argument("--ext", default="mp4", choices=["mp4", "mov"], help="output container. Default mp4")
     p_conv.add_argument("--force", action="store_true", help="overwrite / re-encode even if target codec or output exists")
+    p_conv.add_argument("--scale", default=None, help="downscale video to WxH (e.g. 852:480) before encoding")
     p_conv.add_argument("--skip-codec", action="append", default=[], choices=["h264", "hevc", "av1"],
                         help="skip inputs whose video codec matches (repeatable, e.g. --skip-codec av1)")
     p_conv.add_argument("--dry-run", action="store_true", help="print planned commands, write nothing")
