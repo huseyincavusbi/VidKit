@@ -289,6 +289,8 @@ def cmd_convert(args):
             vc = video_codec_of(d)
             if vc is None:
                 job["skip"] = "no video stream"
+            elif vc in args.skip_codec:
+                job["skip"] = f"skipping codec {vc} (--skip-codec)"
             elif vc == target_codec(args) and not args.force:
                 job["skip"] = f"already {target_codec(args).upper()}"
             elif os.path.exists(outfile) and not args.force:
@@ -449,6 +451,8 @@ def main(argv=None):
     p_conv.add_argument("--audio-bitrate", type=int, default=None, help="re-encode audio to AAC at this kbit/s (e.g. 64)")
     p_conv.add_argument("--ext", default="mp4", choices=["mp4", "mov"], help="output container. Default mp4")
     p_conv.add_argument("--force", action="store_true", help="overwrite / re-encode even if target codec or output exists")
+    p_conv.add_argument("--skip-codec", action="append", default=[], choices=["h264", "hevc", "av1"],
+                        help="skip inputs whose video codec matches (repeatable, e.g. --skip-codec av1)")
     p_conv.add_argument("--dry-run", action="store_true", help="print planned commands, write nothing")
     p_conv.set_defaults(func=cmd_convert)
 
