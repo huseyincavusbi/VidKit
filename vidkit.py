@@ -444,7 +444,7 @@ def main(argv=None):
                         help="encoder backend. media=hevc_videotoolbox (default, Apple media engine); "
                              "gpu/hw=alias for media (no separate GPU-shader encoder on Apple Silicon); "
                              "cpu=libx265 software; av1=libsvtav1 software; h264=h264_videotoolbox. Default media")
-    p_conv.add_argument("--quality", type=int, default=60, help="VideoToolbox quality 1-100 (higher=better). Default 60")
+    p_conv.add_argument("--quality", type=int, default=50, help="VideoToolbox quality 1-100 (higher=better). Default 50")
     p_conv.add_argument("--crf", type=int, default=24, help="CRF for libx265 (lower=better). Default 24")
     p_conv.add_argument("--av1-crf", type=int, default=35, help="CRF for libsvtav1. Default 35")
     p_conv.add_argument("--av1-preset", type=int, default=8, help="libsvtav1 preset (0=slowest/best, 13=fastest). Default 8")

@@ -29,7 +29,7 @@ Requires `ffmpeg` and `ffprobe` on PATH.
 
 ## Options
 
-- `--quality N` — VideoToolbox quality 1-100 (default 60)
+- `--quality N` — VideoToolbox quality 1-100 (default 50)
 - `--crf N` — libx265 CRF (default 24)
 - `--av1-crf N` / `--av1-preset N` — AV1 tuning
 - `--audio-bitrate N` — re-encode audio to AAC at N kbit/s
