@@ -24,7 +24,6 @@ Requires `ffmpeg` and `ffprobe` on PATH.
 | `nvenc` | hevc_nvenc | Nvidia GPU hardware (Colab, Kaggle, Linux) |
 | `cpu` | libx265 | software, best quality-per-bit |
 | `av1` | libsvtav1 | software, best quality |
-| `h264` | h264_videotoolbox | Apple Silicon hardware H.264 |
 
 `gpu` / `hw` are aliases for `media`.
 
