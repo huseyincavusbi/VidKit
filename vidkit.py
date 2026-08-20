@@ -212,6 +212,8 @@ def encoder_label(args):
     e = args.encoder
     if e in ("media", "gpu", "hw"):
         return f"hevc_videotoolbox (media engine, q={args.quality})"
+    if e == "nvenc":
+        return f"hevc_nvenc (Nvidia GPU, CQ {args.cq}, p5)"
     if e == "cpu":
         return f"libx265 (CPU, CRF {args.crf})"
     if e == "av1":
@@ -235,6 +237,17 @@ def build_cmd(infile, outfile, args):
     e = args.encoder
     if e in ("media", "gpu", "hw"):
         cmd += ["-c:v", "hevc_videotoolbox", "-q:v", str(args.quality), "-tag:v", "hvc1"]
+    elif e == "nvenc":
+        cmd += [
+            "-c:v", "hevc_nvenc",
+            "-preset", "p5",
+            "-rc", "vbr",
+            "-cq", str(args.cq),
+            "-b:v", "0",
+            "-spatial-aq", "1",
+            "-temporal-aq", "1",
+            "-tag:v", "hvc1"
+        ]
     elif e == "cpu":
         cmd += ["-c:v", "libx265", "-crf", str(args.crf), "-preset", "fast", "-tag:v", "hvc1"]
     elif e == "av1":
@@ -440,11 +453,12 @@ def main(argv=None):
     p_conv = sub.add_parser("convert", help="re-encode videos (media engine HEVC by default)")
     p_conv.add_argument("target", help="file or directory")
     p_conv.add_argument("--out-dir", help="output directory (default: <source>/hevc)")
-    p_conv.add_argument("--encoder", choices=["media", "gpu", "hw", "cpu", "av1", "h264"], default="media",
+    p_conv.add_argument("--encoder", choices=["media", "gpu", "hw", "cpu", "av1", "h264", "nvenc"], default="media",
                         help="encoder backend. media=hevc_videotoolbox (default, Apple media engine); "
-                             "gpu/hw=alias for media (no separate GPU-shader encoder on Apple Silicon); "
+                             "gpu/hw=alias for media; nvenc=hevc_nvenc (Nvidia GPU); "
                              "cpu=libx265 software; av1=libsvtav1 software; h264=h264_videotoolbox. Default media")
     p_conv.add_argument("--quality", type=int, default=50, help="VideoToolbox quality 1-100 (higher=better). Default 50")
+    p_conv.add_argument("--cq", type=int, default=28, help="Constant Quality for Nvidia NVENC (1-51, lower=better). Default 28")
     p_conv.add_argument("--crf", type=int, default=24, help="CRF for libx265 (lower=better). Default 24")
     p_conv.add_argument("--av1-crf", type=int, default=35, help="CRF for libsvtav1. Default 35")
     p_conv.add_argument("--av1-preset", type=int, default=8, help="libsvtav1 preset (0=slowest/best, 13=fastest). Default 8")

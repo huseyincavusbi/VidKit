@@ -20,16 +20,18 @@ Requires `ffmpeg` and `ffprobe` on PATH.
 
 | option | backend | notes |
 |---|---|---|
-| `media` | hevc_videotoolbox | default, hardware, fast |
+| `media` | hevc_videotoolbox | default, Apple Silicon hardware, fast |
+| `nvenc` | hevc_nvenc | Nvidia GPU hardware (Colab, Kaggle, Linux) |
 | `cpu` | libx265 | software, best quality-per-bit |
 | `av1` | libsvtav1 | software, best quality |
-| `h264` | h264_videotoolbox | hardware, max compatibility |
+| `h264` | h264_videotoolbox | Apple Silicon hardware H.264 |
 
 `gpu` / `hw` are aliases for `media`.
 
 ## Options
 
 - `--quality N` — VideoToolbox quality 1-100 (default 50)
+- `--cq N` — Nvidia NVENC constant quality 1-51 (default 28)
 - `--crf N` — libx265 CRF (default 24)
 - `--av1-crf N` / `--av1-preset N` — AV1 tuning
 - `--audio-bitrate N` — re-encode audio to AAC at N kbit/s
