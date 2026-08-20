@@ -213,7 +213,8 @@ def encoder_label(args):
     if e in ("media", "gpu", "hw"):
         return f"hevc_videotoolbox (media engine, q={args.quality})"
     if e == "nvenc":
-        return f"hevc_nvenc (Nvidia GPU, CQ {args.cq}, p5)"
+        gpu_str = f" #{args.gpu_id}" if getattr(args, "gpu_id", None) is not None else ""
+        return f"hevc_nvenc (Nvidia GPU{gpu_str}, CQ {args.cq}, p5)"
     if e == "cpu":
         return f"libx265 (CPU, CRF {args.crf})"
     if e == "av1":
@@ -244,6 +245,8 @@ def build_cmd(infile, outfile, args):
             "-temporal-aq", "1",
             "-tag:v", "hvc1"
         ]
+        if getattr(args, "gpu_id", None) is not None:
+            cmd += ["-gpu", str(args.gpu_id)]
     elif e == "cpu":
         cmd += ["-c:v", "libx265", "-crf", str(args.crf), "-preset", "fast", "-tag:v", "hvc1"]
     elif e == "av1":
@@ -453,6 +456,7 @@ def main(argv=None):
                              "cpu=libx265 software; av1=libsvtav1 software. Default media")
     p_conv.add_argument("--quality", type=int, default=50, help="VideoToolbox quality 1-100 (higher=better). Default 50")
     p_conv.add_argument("--cq", type=int, default=28, help="Constant Quality for Nvidia NVENC (1-51, lower=better). Default 28")
+    p_conv.add_argument("--gpu-id", type=int, default=None, help="Target Nvidia GPU device ID for NVENC (e.g. 0, 1). Default None")
     p_conv.add_argument("--crf", type=int, default=24, help="CRF for libx265 (lower=better). Default 24")
     p_conv.add_argument("--av1-crf", type=int, default=35, help="CRF for libsvtav1. Default 35")
     p_conv.add_argument("--av1-preset", type=int, default=8, help="libsvtav1 preset (0=slowest/best, 13=fastest). Default 8")
